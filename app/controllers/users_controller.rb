@@ -10,8 +10,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @microposts = @user.microposts.paginate(page: params[:page])
     redirect_to root_url and return unless @user.activated?
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def new
@@ -20,7 +20,6 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-
     if @user.save
       @user.send_activation_email
       flash[:info] = "Please check your email to activate your account."
@@ -31,12 +30,11 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find_by(params[:id])
+    @user = User.find(params[:id])
   end
 
   def update
-    @user = User.find_by(params[:id])
-
+    @user = User.find(params[:id])
     if @user.update_attributes(user_params)
       flash[:success] = "Profile updated"
       redirect_to @user
@@ -72,7 +70,7 @@ class UsersController < ApplicationController
     end
 
     def correct_user
-      @user = User.find_by(params[:id])
+      @user = User.find(params[:id])
       redirect_to(root_url) unless current_user?(@user)
     end
 
